@@ -475,6 +475,7 @@ async function updateTableau() {
 
         const idForClick = (student.id !== undefined && student.id !== null) ? student.id : student.num;
 
+        // Use single-quoted HTML attributes and JSON.stringify for the id to avoid breaking when id is a string
         row.innerHTML = `
             <td class="numero-col">${String(student.num).padStart(2, '0')}</td>
             <td class="nom-col">${student.nom}</td>
@@ -482,30 +483,17 @@ async function updateTableau() {
             <td>
                 <div class="status-buttons">
                     <button class="status-btn ${status === 'present' ? 'present' : ''}" 
-                            onclick="setStatus('${filiere}', ${semaine}, ${JSON.stringify(idForClick)}, 'present')">
+                            onclick='setStatus("${filiere}", ${semaine}, ${JSON.stringify(idForClick)}, "present")'>
                         ✓ Présent
                     </button>
                     <button class="status-btn ${status === 'absent' ? 'absent' : ''}" 
-                            onclick="setStatus('${filiere}', ${semaine}, ${JSON.stringify(idForClick)}, 'absent')">
+                            onclick='setStatus("${filiere}", ${semaine}, ${JSON.stringify(idForClick)}, "absent")'>
                         ✗ Absent
                     </button>
                 </div>
             </td>
             <td>
-                <button class="btn-detail btn-secondary" onclick="openDetail('${filiere}', ${JSON.stringify(idForClick)})">Détail</button>
-            </td>
-        `;
-
-        tableBody.appendChild(row);
-    });
-
-    // Appliquer les styles
-    applyStatusStyles();
-}
-
-/**
- * Définir le statut d'un étudiant
- */
+                <button class="btn-detail btn-secondary" onclick='openDetail("${filiere}", ${JSON.stringify(idForClick)})'>Détail</button>
 async function setStatus(filiere, semaine, idOrNum, status) {
     const modules = getTeacherModules(filiere);
     const moduleName = (modules && modules.length) ? modules[0] : '';
@@ -652,7 +640,7 @@ async function parseDATFile(content, filiere, semaine) {
     let invalidCount = 0;
 
     // Registered students for this filiere
-    const registered = getRegisteredStudents(filiere);
+    const registered = await getRegisteredStudents(filiere);
     const localStudents = JSON.parse(localStorage.getItem('local_students') || '[]');
 
     // Keep a set of keys marked present during this import to avoid duplicates
