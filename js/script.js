@@ -281,8 +281,7 @@ async function handleLogin(e) {
         sessionStorage.setItem('current_user', 'professeur');
         sessionStorage.setItem('current_user_display', 'Ahmed Aberqi');
         sessionStorage.setItem('current_user_modules', JSON.stringify(users['professeur'].modules || {}));
-        // Redirect immediately to avoid race with form submission handlers
-        window.location.href = 'gestion.html';
+        setTimeout(() => { window.location.href = 'gestion.html'; }, 150);
         return;
     }
 
@@ -299,7 +298,7 @@ async function handleLogin(e) {
             sessionStorage.setItem('current_user', data.username || username);
             sessionStorage.setItem('current_user_display', data.name || username);
             sessionStorage.setItem('current_user_modules', JSON.stringify(data.modules || {}));
-            window.location.href = 'gestion.html';
+            setTimeout(() => { window.location.href = 'gestion.html'; }, 300);
             return;
         }
 
@@ -315,7 +314,7 @@ async function handleLogin(e) {
             sessionStorage.setItem('current_user', username);
             sessionStorage.setItem('current_user_display', local.name || username);
             sessionStorage.setItem('current_user_modules', JSON.stringify(local.modules || {}));
-            window.location.href = 'gestion.html';
+            setTimeout(() => { window.location.href = 'gestion.html'; }, 300);
             return;
         }
 
@@ -340,7 +339,7 @@ async function handleLogin(e) {
             sessionStorage.setItem('current_user', username);
             sessionStorage.setItem('current_user_display', local.name || username);
             sessionStorage.setItem('current_user_modules', JSON.stringify(local.modules || {}));
-            window.location.href = 'gestion.html';
+            setTimeout(() => { window.location.href = 'gestion.html'; }, 300);
             return;
         }
 
