@@ -294,8 +294,6 @@ async function handleLogin(e) {
         // If server response is not a success, attempt local fallback before showing an error.
         const serverMessage = (data && data.error) ? data.error : 'Nom d\'utilisateur ou mot de passe incorrect';
         const local = users[username];
-        // Debug info for login attempts
-        try { console.debug('Login attempt', { username, status: res.status, ok: res.ok, serverMessage, hasLocal: !!local, localPasswordMatches: !!(local && local.password === password) }); } catch (e) {}
         if (local && local.password === password) {
             console.log('Login: using local fallback for', username);
             errorMessage.style.display = 'none';
