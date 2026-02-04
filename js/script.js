@@ -274,17 +274,6 @@ async function handleLogin(e) {
     const password = document.getElementById('password').value.trim();
     const errorMessage = document.getElementById('errorMessage');
 
-    // Quick local override for professor to ensure access on static site
-    if (username === 'professeur' && password === 'ensa2024') {
-        // Immediate local login (works when backend is not available)
-        sessionStorage.setItem('user_logged_in', 'true');
-        sessionStorage.setItem('current_user', 'professeur');
-        sessionStorage.setItem('current_user_display', 'Ahmed Aberqi');
-        sessionStorage.setItem('current_user_modules', JSON.stringify(users['professeur'].modules || {}));
-        setTimeout(() => { window.location.href = 'gestion.html'; }, 150);
-        return;
-    }
-
     // Try server first, but fall back to local hardcoded users when unreachable
     try {
         const res = await fetch(API_BASE + '/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
