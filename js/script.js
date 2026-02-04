@@ -291,24 +291,25 @@ async function handleLogin(e) {
             return;
         }
 
-        // If server response is not a success, attempt local fallback before showing an error.
+        // Server responded but rejected credentials or returned an error (e.g., 401, 404) — try local fallback before showing message.
         const serverMessage = (data && data.error) ? data.error : 'Nom d\'utilisateur ou mot de passe incorrect';
-        const local = users[username];
-        if (local && local.password === password) {
-            console.log('Login: using local fallback for', username);
-            errorMessage.style.display = 'none';
-            sessionStorage.setItem('user_logged_in', 'true');
-            sessionStorage.setItem('current_user', username);
-            sessionStorage.setItem('current_user_display', local.name || username);
-            sessionStorage.setItem('current_user_modules', JSON.stringify(local.modules || {}));
-            setTimeout(() => { window.location.href = 'gestion.html'; }, 300);
+        if (res.status === 401 || (res.ok && data && data.ok === false) || res.status === 404) {
+            const local = users[username];
+            if (local && local.password === password) {
+                console.log('Login: server rejected credentials or is missing, local fallback succeeded for', username);
+                errorMessage.style.display = 'none';
+                sessionStorage.setItem('user_logged_in', 'true');
+                sessionStorage.setItem('current_user', username);
+                sessionStorage.setItem('current_user_display', local.name || username);
+                sessionStorage.setItem('current_user_modules', JSON.stringify(local.modules || {}));
+                setTimeout(() => { window.location.href = 'gestion.html'; }, 300);
+                return;
+            }
+            // No local fallback; show server message
+            errorMessage.textContent = serverMessage;
+            errorMessage.style.display = 'block';
             return;
         }
-
-        // No local fallback; show server message
-        errorMessage.textContent = serverMessage;
-        errorMessage.style.display = 'block';
-        return;
 
         // Other server-side failure: show the message
         errorMessage.textContent = serverMessage;
