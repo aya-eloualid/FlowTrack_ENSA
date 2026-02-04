@@ -291,12 +291,12 @@ async function handleLogin(e) {
             return;
         }
 
-        // Server responded but rejected credentials (e.g., 401). Attempt local fallback for known local accounts.
+        // Server responded but rejected credentials or returned an error (e.g., 401, 404) — try local fallback before showing message.
         const serverMessage = (data && data.error) ? data.error : 'Nom d\'utilisateur ou mot de passe incorrect';
-        if (res.status === 401 || (res.ok && data && data.ok === false)) {
+        if (res.status === 401 || (res.ok && data && data.ok === false) || res.status === 404) {
             const local = users[username];
             if (local && local.password === password) {
-                console.log('Login: server rejected credentials but local fallback succeeded for', username);
+                console.log('Login: server rejected credentials or is missing, local fallback succeeded for', username);
                 errorMessage.style.display = 'none';
                 sessionStorage.setItem('user_logged_in', 'true');
                 sessionStorage.setItem('current_user', username);
